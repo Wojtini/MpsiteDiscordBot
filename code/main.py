@@ -6,7 +6,7 @@ from discord.ext import commands
 from discord.ext.commands import bot
 import os
 from api.flask_api import run_api
-from cron_jobs.cron import cron_wn8
+from cron_jobs.cron import scheduler
 
 intents = discord.Intents.all()
 intents.members = True
@@ -17,11 +17,11 @@ token = os.environ.get('DSC_TOKEN')
 # ffmpeg_executable = f"./ffmpeg/bin/ffmpeg.exe"
 # mc = music_cog(bot, ffmpeg_executable)
 # bot.add_cog(mc)
-
+token = "NzE4MDk2MjYyNzkyMjE2NTc2.Xtj5Qg.cxIFwISUsq6sgg4ggz-swOtOG9M"
 
 @bot.event
 async def on_ready():
-    bot.loop.create_task(cron_wn8(bot))
+    bot.loop.create_task(scheduler(bot))
     print('Bot Started')
 
 
