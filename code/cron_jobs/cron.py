@@ -16,4 +16,4 @@ async def cron_wn8(bot, guild_id, channel_id):
                 msg += f'{tank.wn8}\n'
         # print(msg)
         await text_channel.send(msg)
-        await asyncio.sleep(6*60*60*60)
+        await asyncio.sleep(6*60*60)

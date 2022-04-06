@@ -1,2 +1,6 @@
 discord
 requests
+youtube_dl
+PyNaCl
+flask
+threading
