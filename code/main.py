@@ -14,9 +14,6 @@ intents.members = True
 bot = commands.Bot(command_prefix='$', intents=intents)
 
 token = os.environ.get('DSC_TOKEN')
-guild_id = int(os.environ.get('GUILD_ID'))
-channel_id = int(os.environ.get('CHANNEL_ID'))
-
 # ffmpeg_executable = f"./ffmpeg/bin/ffmpeg.exe"
 # mc = music_cog(bot, ffmpeg_executable)
 # bot.add_cog(mc)
@@ -24,7 +21,7 @@ channel_id = int(os.environ.get('CHANNEL_ID'))
 
 @bot.event
 async def on_ready():
-    bot.loop.create_task(cron_wn8(bot, guild_id, channel_id))
+    bot.loop.create_task(cron_wn8(bot))
     print('Bot Started')
 
 

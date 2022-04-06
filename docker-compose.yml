@@ -6,8 +6,8 @@ services:
     command: python code/main.py
     environment:
       - API_URL=http://milepogawedki.xyz:8000/api/
-      - DSC_TOKEN=NzE4MDk2MjYyNzkyMjE2NTc2.Xtj5Qg.jHZZfB0bUNbZ19-xleDBe0aIypE
-      - GUILD_ID=436894631578566676
-      - CHANNEL_ID=960443126881845288
+      - DSC_TOKEN=https://discord.com/developers/applications/
+    ports:
+      - "8080:8080"
     volumes:
       - .:/code
