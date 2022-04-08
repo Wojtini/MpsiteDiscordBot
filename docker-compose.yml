@@ -5,8 +5,8 @@ services:
     build: .
     command: python code/main.py
     environment:
-      - API_URL=http://milepogawedki.xyz:8000/api/
-      - DSC_TOKEN=https://discord.com/developers/applications/
+      - API_URL=http://172.20.0.2:8000/api/
+      - DSC_TOKEN=TOKEN_DEV
     ports:
       - "8080:8080"
     volumes:
