@@ -14,7 +14,6 @@ bot = commands.Bot(command_prefix='^', intents=intents)
 
 default_guild_id = 436894631578566676
 default_voice_channel_id = 609423805726851129
-default_music_url = "https://www.youtube.com/watch?v=se4U_LTeVAE"
 
 DscBot = DiscordBot(bot)
 
@@ -22,7 +21,6 @@ DscBot = DiscordBot(bot)
 async def on_ready():
     bot.loop.create_task(scheduler(DscBot))
     await DscBot.connect_to_voice_channel_by_id(default_guild_id, default_voice_channel_id)
-    DscBot.play_music(default_music_url)
     print('Bot Started')
 
 

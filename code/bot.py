@@ -1,4 +1,5 @@
 import logging
+import time
 import discord
 from discord import ClientException
 from youtube_dl import YoutubeDL
@@ -11,9 +12,11 @@ class DiscordBot:
         self.voice_client = None
 
         ## Music bot options
+        self.is_playing = False
         self.current_playlist = None # Just info
         self.priority_playlist = [] # []
-        self.playlist_song_list = [] # [[song,url], [song2,url2]...]
+        self.playlist_song_list = [] # [Song1, Song2...]
+        self.current_playlist_index = 0
         self.current_guild = None
         self.current_voice_channel = None
 
@@ -21,6 +24,14 @@ class DiscordBot:
         self.FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
                                'options': '-vn'}
         discord.opus.load_opus("/usr/lib/libopus.so.0.8.0")
+
+    def set_playlist(self, name, songs):
+        self.stop_music()
+        while self.is_playing:
+            pass
+        self.current_playlist = name
+        self.playlist_song_list = songs
+        self.play_music()
 
     def add_to_priority_queue(self, title, url, front=False):
         if front:
@@ -45,27 +56,42 @@ class DiscordBot:
         await self.connect_to_voice_channel_by_object(self.current_voice_channel)
 
     async def connect_to_voice_channel_by_object(self, voice_channel):
-        if self.voice_client is not None:
-            self.current_voice_channel = voice_channel
-            self.current_voice_channel = voice_channel.guild
-            await self.voice_client.move_to(voice_channel)
-            return
-        self.voice_client = await voice_channel.connect()
+        self.current_voice_channel = voice_channel
+        self.current_voice_channel = voice_channel.guild
 
-    def play_music(self, query):
-        self.voice_client.stop()
-        song = self.search_yt(query)
+        if self.voice_client is not None:
+            await self.voice_client.move_to(voice_channel)
+        else:
+            self.voice_client = await voice_channel.connect()
+
+    def play_music(self):
+        if len(self.playlist_song_list) == 0:
+            self.is_playing = False
+            return
+        self.is_playing = True
+        if len(self.priority_playlist) == 0:
+            song = self.search_yt(
+                self.playlist_song_list[self.current_playlist_index].url
+            )
+            self.current_playlist_index = (self.current_playlist_index + 1) % len(self.playlist_song_list)
+        else:
+            song_info = self.priority_playlist.pop(0)
+            song = self.search_yt(song_info.url)
         if song is None:
             logging.warning("Error do loga na dsc? moze")
             return
-        m_url = song['source']
-        print(m_url)
+        print("Robie cos")
         try:
-            self.voice_client.play(discord.FFmpegPCMAudio(m_url, **self.FFMPEG_OPTIONS), after=lambda e: self.play_music(query))
+            self.voice_client.play(discord.FFmpegPCMAudio(song['source'], **self.FFMPEG_OPTIONS), after=lambda e: self.play_music())
         except ClientException:
-            self.connect_to_voice_channel_by_id(436894631578566676, 609423805726851129)
-            self.voice_client.play(discord.FFmpegPCMAudio(m_url, **self.FFMPEG_OPTIONS),
-                                   after=lambda e: self.play_music(query))
+            print("RIPDASKJDHSjkh")
+            return
 
     def stop_music(self):
+        self.current_playlist = "None"
+        self.current_playlist_index = 0
+        self.playlist_song_list = []
+        self.voice_client.stop()
+
+    def skip_music(self):
         self.voice_client.stop()
